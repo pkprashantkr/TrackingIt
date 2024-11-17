@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import {
   Card,
   Col,
@@ -63,8 +64,16 @@ function AddExpenseModal({
             { required: true, message: "Please select the expense date!" },
           ]}
         >
-          <DatePicker className="custom-input" format="YYYY-MM-DD" />
+          <DatePicker
+            className="custom-input"
+            format="YYYY-MM-DD"
+            disabledDate={(current) => {
+              // Disable future dates
+              return current && current > moment().endOf("day");
+            }}
+          />
         </Form.Item>
+
         <Form.Item
           label="Tag"
           name="tag"
@@ -75,6 +84,7 @@ function AddExpenseModal({
             <Select.Option value="food">Food</Select.Option>
             <Select.Option value="education">Education</Select.Option>
             <Select.Option value="office">Office</Select.Option>
+            <Select.Option value="others">Others</Select.Option>
             {/* Add more tags here */}
           </Select>
         </Form.Item>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Row } from "antd";
+import ResetBalanceButton from "./Modals/ResetBalanceButton";
 
 function Cards({
   currentBalance,
@@ -8,7 +9,7 @@ function Cards({
   showExpenseModal,
   showIncomeModal,
   cardStyle,
-  reset,
+  reset, // Accept reset as a prop
 }) {
   return (
     <Row
@@ -21,17 +22,17 @@ function Cards({
     >
       <Card bordered={true} style={cardStyle}>
         <h2>Current Balance</h2>
-        <p>₹{currentBalance}</p>
-        <div class="btn btn-blue" style={{ margin: 0 }} onClick={reset}>
-          Reset Balance
+        <p style={{ fontSize: "1.1rem" }}>₹{currentBalance}</p>
+        <div>
+          {reset} {/* Use the reset prop here */}
         </div>
       </Card>
 
       <Card bordered={true} style={cardStyle}>
         <h2>Total Income</h2>
-        <p>₹{income}</p>
+        <p style={{ fontSize: "1.1rem" }}>₹{income}</p>
         <div
-          class="btn btn-blue"
+          className="btn btn-blue"
           style={{ margin: 0 }}
           onClick={showIncomeModal}
         >
@@ -41,7 +42,7 @@ function Cards({
 
       <Card bordered={true} style={cardStyle}>
         <h2>Total Expenses</h2>
-        <p>₹{expenses}</p>
+        <p style={{ fontSize: "1.1rem" }}>₹{expenses}</p>
         <div className="btn btn-blue" onClick={showExpenseModal}>
           Add Expense
         </div>

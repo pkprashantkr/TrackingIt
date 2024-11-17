@@ -4,13 +4,13 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAHExHfMDRu2lVecgYxgW86TXDF-dvsWrY",
-  authDomain: "personal-finance-tracker-ec56e.firebaseapp.com",
-  projectId: "personal-finance-tracker-ec56e",
-  storageBucket: "personal-finance-tracker-ec56e.appspot.com",
-  messagingSenderId: "669303047696",
-  appId: "1:669303047696:web:5b4b41cc896752c03e6c95",
-  measurementId: "G-7X36E69HYW",
+  apiKey: "AIzaSyDuW7jcCDN0k6v7sZAjy1kiuCMJjHl92bc",
+  authDomain: "trackit-expense-tracker-ff1f9.firebaseapp.com",
+  projectId: "trackit-expense-tracker-ff1f9",
+  storageBucket: "trackit-expense-tracker-ff1f9.firebasestorage.app",
+  messagingSenderId: "323411921469",
+  appId: "1:323411921469:web:ba9bdea9bfd6f4fb82f854",
+  measurementId: "G-10QVX6RWJ4",
 };
 
 const app = initializeApp(firebaseConfig);

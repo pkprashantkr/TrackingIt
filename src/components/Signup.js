@@ -113,7 +113,7 @@ const SignUpSignIn = () => {
         {flag ? (
           <div className="signup-signin-container">
             <h2 style={{ textAlign: "center" }}>
-              Log In on <span className="blue-text">Financely.</span>
+              Log In on <span className="blue-text"> Trackit</span>
             </h2>
             <form onSubmit={signUpWithEmail}>
               <div className="input-wrapper">
@@ -161,13 +161,14 @@ const SignUpSignIn = () => {
                 cursor: "pointer",
               }}
             >
-              Or Don't Have An Account? Click Here.
+              Or Don't Have An Account?
+              <span style={{ color: "blue" }}> Click Here. </span>
             </p>
           </div>
         ) : (
           <div className="signup-signin-container">
             <h2 style={{ textAlign: "center" }}>
-              Sign Up on <span className="blue-text">Financely.</span>
+              Sign Up on <span className="blue-text">Trackit</span>
             </h2>
             <form onSubmit={signUpWithEmail}>
               <div className="input-wrapper">
@@ -230,7 +231,8 @@ const SignUpSignIn = () => {
                 cursor: "pointer",
               }}
             >
-              Or Have An Account Already? Click Here
+              Or Have An Account Already?{" "}
+              <span style={{ color: "blue" }}> Click Here </span>
             </p>
             {/* <button onClick={signInWithEmail}>
             Sign In with Email and Password

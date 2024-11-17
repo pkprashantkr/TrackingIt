@@ -6,6 +6,7 @@ import TransactionSearch from "./TransactionSearch";
 import Header from "./Header";
 import AddIncomeModal from "./Modals/AddIncome";
 import AddExpenseModal from "./Modals/AddExpense";
+import ResetBalanceButton from "../components/Modals/ResetBalanceButton";
 import Cards from "./Cards";
 import NoTransactions from "./NoTransactions";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -196,12 +197,10 @@ const Dashboard = () => {
     colorField: "category",
   };
 
-  function reset() {
-    console.log("resetting");
-  }
   const cardStyle = {
     boxShadow: "0px 0px 30px 8px rgba(227, 227, 227, 0.75)",
-    margin: "2rem",
+    margin: "1.5rem",
+    marginTop: "2rem",
     borderRadius: "0.5rem",
     minWidth: "400px",
     flex: 1,
@@ -229,13 +228,19 @@ const Dashboard = () => {
       ) : (
         <>
           <Cards
-            currentBalance={currentBalance}
             income={income}
             expenses={expenses}
+            currentBalance={currentBalance}
             showExpenseModal={showExpenseModal}
             showIncomeModal={showIncomeModal}
             cardStyle={cardStyle}
-            reset={reset}
+            reset={
+              <ResetBalanceButton
+                setIncome={setIncome}
+                setExpense={setExpenses}
+                setTotalBalance={setCurrentBalance}
+              />
+            } // Pass ResetBalanceButton as a prop
           />
 
           <AddExpenseModal
@@ -254,12 +259,12 @@ const Dashboard = () => {
             <>
               <Row gutter={16}>
                 <Card bordered={true} style={cardStyle}>
-                  <h2>Financial Statistics</h2>
+                  <h2 className="head">Financial Statistics</h2>
                   <Line {...{ ...balanceConfig, data: balanceData }} />
                 </Card>
 
                 <Card bordered={true} style={{ ...cardStyle, flex: 0.45 }}>
-                  <h2>Total Spending</h2>
+                  <h2 className="pie">Total Spending</h2>
                   {spendingDataArray.length == 0 ? (
                     <p>Seems like you haven't spent anything till now...</p>
                   ) : (

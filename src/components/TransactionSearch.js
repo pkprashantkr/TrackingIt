@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import "../App.css";
 import { Input, Table, Select, Radio } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import search from "../assets/search.svg";
@@ -76,7 +77,9 @@ const TransactionSearch = ({
 
   const filteredTransactions = transactions.filter((transaction) => {
     const searchMatch = searchTerm
-      ? transaction.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ? transaction.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        transaction.tag.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        transaction.type.toLowerCase().includes(searchTerm.toLowerCase())
       : true;
     const tagMatch = selectedTag ? transaction.tag === selectedTag : true;
     const typeMatch = typeFilter ? transaction.type === typeFilter : true;
@@ -146,38 +149,26 @@ const TransactionSearch = ({
         <Option value="office">Office</Option>
       </Select> */}
       <div className="my-table">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            marginBottom: "1rem",
-          }}
-        >
+        <div className="table-header">
           <h2>My Transactions</h2>
 
-          <Radio.Group
-            className="input-radio"
-            onChange={(e) => setSortKey(e.target.value)}
-            value={sortKey}
-          >
-            <Radio.Button value="">No Sort</Radio.Button>
-            <Radio.Button value="date">Sort by Date</Radio.Button>
-            <Radio.Button value="amount">Sort by Amount</Radio.Button>
-          </Radio.Group>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "1rem",
-              width: "400px",
-            }}
-          >
-            <button className="btn" onClick={exportToCsv}>
+          <div className="sort">
+            <Radio.Group
+              className="input-radio"
+              onChange={(e) => setSortKey(e.target.value)}
+              value={sortKey}
+            >
+              <Radio.Button value="">No Sort</Radio.Button>
+              <Radio.Button value="date">By Date</Radio.Button>
+              <Radio.Button value="amount">By Amount</Radio.Button>
+            </Radio.Group>
+          </div>
+
+          <div className="import-export-buttons">
+            <button className="btn btn-export" onClick={exportToCsv}>
               Export to CSV
             </button>
-            <label for="file-csv" className="btn btn-blue">
+            <label htmlFor="file-csv" className="btn btn-blue">
               Import from CSV
             </label>
             <input
@@ -190,8 +181,9 @@ const TransactionSearch = ({
             />
           </div>
         </div>
-
-        <Table columns={columns} dataSource={dataSource} />
+        <div className="table-container">
+          <Table columns={columns} dataSource={dataSource} />
+        </div>
       </div>
     </div>
   );

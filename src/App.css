@@ -54,7 +54,7 @@
   color: var(--theme);
   text-align: center;
   width: 100%;
-  margin: 0.5rem 0rem;
+  margin: 0.5rem 0.3rem;
   padding: 0.5rem !important;
   background-color: #fff;
   border: 1px solid var(--theme);
@@ -80,6 +80,17 @@
 .btn-blue:hover {
   background-color: #fff !important;
   color: var(--theme) !important;
+  transition: all 0.3s;
+}
+
+.btn-red {
+  background-color: #c80707;
+  color: #fff;
+  border: none;
+}
+
+.btn-red:hover {
+  background-color: #910505;
   transition: all 0.3s;
 }
 
@@ -125,6 +136,16 @@
   border: 0px solid #fff !important;
 }
 
+.head {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.pie {
+  text-align: center;
+  margin-bottom: 0rem;
+}
+
 .my-table {
   box-shadow: 0px 0px 30px 8px rgba(227, 227, 227, 0.75);
   border-radius: 0.5rem !important;
@@ -134,4 +155,89 @@
 
 .dashboard-container {
   padding-bottom: 1rem;
+}
+
+.my-table {
+  width: 100%;
+  padding: 1rem;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap; /* This allows items to wrap on smaller screens */
+}
+
+.sort {
+  margin-top: 1.3rem;
+  margin-bottom: 1.3rem;
+}
+
+.table-header h2 {
+  margin: 0.6rem;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* Allows horizontal scrolling on small screens */
+}
+
+.input-radio {
+  display: flex;
+  gap: 0rem;
+}
+
+.import-export-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.import-export-buttons .btn {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border: none;
+  border: #007bff;
+}
+
+.import-export-buttons .btn-export {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border: none;
+  border: #007bff;
+  border: 0.05rem solid var(--theme);
+}
+
+.import-export-buttons .btn-blue {
+  background-color: #007bff;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .table-header {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    align-items: center;
+  }
+
+  .table-header h2 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .import-export-buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: none;
+  }
+
+  .import-export-buttons .btn {
+    width: 100%;
+    margin-bottom: 0.1rem; /* Adds space between buttons */
+    margin-top: 1rem; /* Adds space between buttons */
+  }
 }
