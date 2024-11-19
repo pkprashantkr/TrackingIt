@@ -201,21 +201,22 @@
 .import-export-buttons .btn {
   padding: 0.5rem 1rem;
   cursor: pointer;
-  border: none;
-  border: #007bff;
+
+  border: var(--theme);
 }
 
 .import-export-buttons .btn-export {
   padding: 0.5rem 1rem;
   cursor: pointer;
   border: none;
-  border: #007bff;
+  border: var(--theme);
   border: 0.05rem solid var(--theme);
 }
 
 .import-export-buttons .btn-blue {
-  background-color: #007bff;
+  background-color: var(--theme);
   color: white;
+  border: 1px solid var(--theme);
 }
 
 @media (max-width: 768px) {
