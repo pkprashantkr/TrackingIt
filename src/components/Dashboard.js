@@ -20,30 +20,6 @@ import "../App.css";
 
 const Dashboard = () => {
   const [user] = useAuthState(auth);
-
-  // const sampleTransactions = [
-  // {
-  //   name: "Pay day",
-  //   type: "income",
-  //   date: "2023-01-15",
-  //   amount: 2000,
-  //   tag: "salary",
-  // },
-  // {
-  //   name: "Dinner",
-  //   type: "expense",
-  //   date: "2023-01-20",
-  //   amount: 500,
-  //   tag: "food",
-  // },
-  // {
-  //   name: "Books",
-  //   type: "expense",
-  //   date: "2023-01-25",
-  //   amount: 300,
-  //   tag: "education",
-  // },
-  // ];
   const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
   const [isIncomeModalVisible, setIsIncomeModalVisible] = useState(false);
   const [transactions, setTransactions] = useState([]);
@@ -170,21 +146,22 @@ const Dashboard = () => {
     }
   }
 
-  async function fetchTransactions() {
-    setLoading(true);
-    if (user) {
-      const q = query(collection(db, `users/${user.uid}/transactions`));
-      const querySnapshot = await getDocs(q);
-      let transactionsArray = [];
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        transactionsArray.push(doc.data());
-      });
-      setTransactions(transactionsArray);
-      toast.success("Transactions Fetched!");
+  const fetchTransactions = async () => {
+    try {
+      const querySnapshot = await getDocs(
+        collection(db, `users/${user.uid}/transactions`)
+      );
+
+      const transaction = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setTransactions(transaction);
+    } catch (error) {
+      console.error("Error fetching transactions: ", error);
     }
-    setLoading(false);
-  }
+  };
 
   const balanceConfig = {
     data: balanceData,
@@ -201,7 +178,7 @@ const Dashboard = () => {
   const cardStyle = {
     boxShadow: "0px 0px 30px 8px rgba(227, 227, 227, 0.75)",
     margin: "1.5rem",
-    marginTop: "1.5rem",
+    marginTop: "2rem",
     borderRadius: "0.5rem",
     minWidth: "400px",
     flex: 1,
@@ -280,6 +257,7 @@ const Dashboard = () => {
             exportToCsv={exportToCsv}
             fetchTransactions={fetchTransactions}
             addTransaction={addTransaction}
+            user={user}
           />
 
           <footer>
@@ -301,7 +279,7 @@ const Dashboard = () => {
                   />
                   <Input
                     className="footer-input"
-                    placeholder="Your address"
+                    placeholder="Your feedback"
                     required
                   />
                   <button className="submit" type="submit">

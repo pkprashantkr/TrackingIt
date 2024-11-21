@@ -1,12 +1,14 @@
 import React, { useRef, useState } from "react";
 import "../App.css";
-import { Input, Table, Select, Radio } from "antd";
+import { Input, Table, Select, Radio, Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import search from "../assets/search.svg";
 import { parse } from "papaparse";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-const { Search } = Input;
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase"; // Ensure Firebase is correctly initialized
+
 const { Option } = Select;
 
 const TransactionSearch = ({
@@ -14,6 +16,7 @@ const TransactionSearch = ({
   exportToCsv,
   addTransaction,
   fetchTransactions,
+  user,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
@@ -21,6 +24,30 @@ const TransactionSearch = ({
   const [sortKey, setSortKey] = useState("");
   const fileInput = useRef();
 
+  // Function to remove transaction from Firestore
+  const handleRemoveTransaction = async (transactionId) => {
+    if (!user || !user.uid) {
+      toast.error("User is not authenticated.");
+      console.error("User is not authenticated.");
+      return;
+    }
+    if (!transactionId) {
+      toast.error("Transaction ID is missing!");
+      console.error("Transaction ID is missing!");
+      return;
+    }
+    try {
+      // Correct Firestore path to the transaction document
+      await deleteDoc(doc(db, `users/${user.uid}/transactions`, transactionId));
+      toast.success("Transaction removed successfully!");
+      fetchTransactions(); // Refresh the list of transactions
+    } catch (error) {
+      toast.error("Failed to remove transaction.");
+      console.error("Error removing transaction: ", error);
+    }
+  };
+
+  // Function to import transactions from CSV
   function importFromCsv(event) {
     event.preventDefault();
     try {
@@ -73,6 +100,18 @@ const TransactionSearch = ({
       dataIndex: "tag",
       key: "tag",
     },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <Button
+          danger
+          onClick={() => handleRemoveTransaction(record.key)} // Use transaction key (ID) for removal
+        >
+          Remove
+        </Button>
+      ),
+    },
   ];
 
   const filteredTransactions = transactions.filter((transaction) => {
@@ -98,7 +137,7 @@ const TransactionSearch = ({
   });
 
   const dataSource = sortedTransactions.map((transaction, index) => ({
-    key: index,
+    key: transaction.id || index, // Ensure unique key for Firebase documents
     ...transaction,
   }));
 
@@ -138,16 +177,6 @@ const TransactionSearch = ({
         </Select>
       </div>
 
-      {/* <Select
-        style={{ width: 200, marginRight: 10 }}
-        onChange={(value) => setSelectedTag(value)}
-        placeholder="Filter by tag"
-        allowClear
-      >
-        <Option value="food">Food</Option>
-        <Option value="education">Education</Option>
-        <Option value="office">Office</Option>
-      </Select> */}
       <div className="my-table">
         <div className="table-header">
           <h2>My Transactions</h2>
