@@ -201,7 +201,7 @@
 .import-export-buttons .btn {
   padding: 0.5rem 1rem;
   cursor: pointer;
-
+  transition: all 0.5s;
   border: var(--theme);
 }
 
@@ -217,6 +217,34 @@
   background-color: var(--theme);
   color: white;
   border: 1px solid var(--theme);
+}
+
+.footer {
+  background-color: #595959;
+  color: #fff;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  margin: 0 auto 2rem; /* Center the div horizontally within the parent */
+  width: 70%;
+  border-radius: 1.2rem;
+  margin-top: 6.5rem;
+}
+.footer h1 {
+  color: #fff;
+  font-size: clamp(1.7rem, 5vw, 3rem); /* Responsive font size */
+  margin-bottom: 1.5rem;
+}
+
+.footer-input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  padding-left: 1.3rem;
 }
 
 @media (max-width: 768px) {

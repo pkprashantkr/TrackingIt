@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row } from "antd";
+import { Button, Card, Input, Row } from "antd";
 import { Line, Pie } from "@ant-design/charts";
 import moment from "moment";
 import TransactionSearch from "./TransactionSearch";
@@ -16,6 +16,7 @@ import Loader from "./Loader";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { unparse } from "papaparse";
+import "../App.css";
 
 const Dashboard = () => {
   const [user] = useAuthState(auth);
@@ -280,6 +281,32 @@ const Dashboard = () => {
             fetchTransactions={fetchTransactions}
             addTransaction={addTransaction}
           />
+
+          <footer>
+            <div className="footer">
+              <h1>Send us your feedback...!</h1>
+              <div>
+                <form>
+                  <Input className="footer-input" placeholder="Your name" />
+                  <Input className="footer-input" placeholder="Your email" />
+                  <Input className="footer-input" placeholder="Your address" />
+                  <Button />
+                </form>
+              </div>
+            </div>
+          </footer>
+
+          <p
+            style={{
+              textAlign: "center",
+              color: "#ababab",
+              backgroundColor: "#ededed",
+              padding: "1.7rem",
+              fontSize: "1rem",
+            }}
+          >
+            &#169; Prashant Kumar. All rights are reserved.
+          </p>
         </>
       )}
     </div>
