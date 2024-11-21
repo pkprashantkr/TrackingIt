@@ -1,3 +1,8 @@
+::selection {
+  background-color: #f0bbff; /* Tomato background */
+  color: #ffffff; /* White text */
+}
+
 .blue-text {
   color: var(--theme);
 }
@@ -220,7 +225,7 @@
 }
 
 .footer {
-  background-color: #595959;
+  background-color: #ffffff;
   color: #fff;
   padding: 2rem;
   display: flex;
@@ -229,22 +234,46 @@
   align-items: center; /* Center content horizontally */
   margin: 0 auto 2rem; /* Center the div horizontally within the parent */
   width: 70%;
+  border: 1px solid #7c7c7c;
   border-radius: 1.2rem;
   margin-top: 6.5rem;
+  margin-bottom: 5rem;
+  box-shadow: 10px 10px 10px rgba(194, 194, 194, 0.9);
 }
 .footer h1 {
-  color: #fff;
-  font-size: clamp(1.7rem, 5vw, 3rem); /* Responsive font size */
+  color: black;
+  font-size: clamp(1.7rem, 5vw, 2.5rem); /* Responsive font size */
   margin-bottom: 1.5rem;
 }
 
 .footer-input {
+  background-color: rgb(223, 223, 223);
+  color: #757575;
   padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-bottom: 1rem;
   padding-left: 1.3rem;
+}
+
+.submit {
+  height: 3rem;
+  width: 7rem;
+  color: #6f1598;
+  background-color: #f0b5fe;
+  border: none;
+  border-radius: 4px;
+  border: 0.09rem solid #6f1598;
+  cursor: pointer;
+  box-shadow: 5px 6px 5px rgba(112, 42, 114, 0.7);
+  margin-top: 1rem;
+}
+
+.submit:hover {
+  background-color: var(--theme);
+  color: #fff;
+  transition: all 0.6s;
 }
 
 @media (max-width: 768px) {

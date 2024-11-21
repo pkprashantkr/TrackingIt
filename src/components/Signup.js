@@ -9,6 +9,8 @@ import {
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import Header from "./Header";
 import { toast } from "react-toastify";
+import { CircleUserRound, LockKeyhole, Mail } from "lucide-react";
+import Google from "../assets/goolge.png";
 
 const SignUpSignIn = () => {
   const [name, setName] = useState("");
@@ -113,26 +115,55 @@ const SignUpSignIn = () => {
         {flag ? (
           <div className="signup-signin-container">
             <h2 style={{ textAlign: "center" }}>
-              Log In on <span className="blue-text"> Trackit</span>
+              Log <span className="blue-text"> in</span>
             </h2>
             <form onSubmit={signUpWithEmail}>
               <div className="input-wrapper">
-                <p>Email</p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Mail
+                    strokeWidth={1}
+                    height="16px"
+                    width="16px"
+                    style={{ marginRight: "0.5rem" }}
+                  />
+                  <p>Email</p>
+                </div>
+
                 <input
                   type="email"
                   placeholder="JohnDoe@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
 
               <div className="input-wrapper">
-                <p>Password</p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <LockKeyhole
+                    strokeWidth={1}
+                    height="16px"
+                    width="16px"
+                    style={{ marginRight: "0.5rem" }}
+                  />
+                  <p>Password</p>
+                </div>
                 <input
                   type="password"
                   placeholder="Example123"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
 
@@ -150,7 +181,20 @@ const SignUpSignIn = () => {
               className="btn btn-blue"
               onClick={signInWithGoogle}
             >
-              {loading ? "Loading..." : " Log In with Google"}
+              {loading ? (
+                "Loading..."
+              ) : (
+                <>
+                  Log in with Google
+                  <img
+                    src={Google}
+                    alt="Google"
+                    height="20px"
+                    width="20px"
+                    style={{ marginLeft: "0.6rem" }}
+                  />
+                </>
+              )}
             </button>
             <p
               onClick={() => setFlag(!flag)}
@@ -158,55 +202,111 @@ const SignUpSignIn = () => {
                 textAlign: "center",
                 marginBottom: 0,
                 marginTop: "0.5rem",
-                cursor: "pointer",
+                fontSize: "0.8rem",
               }}
             >
               Or Don't Have An Account?
-              <span style={{ color: "blue" }}> Click Here. </span>
+              <span style={{ color: "blue", cursor: "pointer" }}> Sign up</span>
             </p>
           </div>
         ) : (
           <div className="signup-signin-container">
             <h2 style={{ textAlign: "center" }}>
-              Sign Up on <span className="blue-text">Trackit</span>
+              Sign <span className="blue-text"> up</span>
             </h2>
             <form onSubmit={signUpWithEmail}>
               <div className="input-wrapper">
-                <p>Full Name</p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <CircleUserRound
+                    strokeWidth={1}
+                    height="16px"
+                    width="16px"
+                    style={{ marginRight: "0.5rem" }}
+                  />
+                  <p>Full Name</p>
+                </div>
                 <input
                   type="text"
                   placeholder="John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
                 />
               </div>
               <div className="input-wrapper">
-                <p>Email</p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Mail
+                    strokeWidth={1}
+                    height="16px"
+                    width="16px"
+                    style={{ marginRight: "0.5rem" }}
+                  />
+                  <p>Email</p>
+                </div>
                 <input
                   type="email"
                   placeholder="JohnDoe@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
 
               <div className="input-wrapper">
-                <p>Password</p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <LockKeyhole
+                    strokeWidth={1}
+                    height="16px"
+                    width="16px"
+                    style={{ marginRight: "0.5rem" }}
+                  />
+                  <p>Password</p>
+                </div>
                 <input
                   type="password"
                   placeholder="Example123"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
 
               <div className="input-wrapper">
-                <p>Confirm Password</p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <LockKeyhole
+                    strokeWidth={1}
+                    height="16px"
+                    width="16px"
+                    style={{ marginRight: "0.5rem" }}
+                  />
+                  <p>Confirm Password</p>
+                </div>
                 <input
                   type="password"
                   placeholder="Example123"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
                 />
               </div>
 
@@ -215,28 +315,45 @@ const SignUpSignIn = () => {
               </button>
             </form>
             <p style={{ textAlign: "center", margin: 0 }}>or</p>
-            <button
-              disabled={loading}
-              className="btn btn-blue"
-              onClick={signInWithGoogle}
-            >
-              {loading ? "Loading..." : "Sign Up with Google"}
-            </button>
+
+            <div>
+              <button
+                disabled={loading}
+                className="btn btn-blue flex items-center justify-center gap-2"
+                onClick={signInWithGoogle}
+              >
+                {loading ? (
+                  "Loading..."
+                ) : (
+                  <>
+                    Sign Up with Google
+                    <img
+                      src={Google}
+                      alt="Google"
+                      height="20px"
+                      width="20px"
+                      style={{ marginLeft: "0.6rem" }}
+                    />
+                  </>
+                )}
+              </button>
+            </div>
             <p
-              onClick={() => setFlag(!flag)}
               style={{
                 textAlign: "center",
                 marginBottom: 0,
                 marginTop: "0.5rem",
-                cursor: "pointer",
+                fontSize: "0.8rem",
               }}
             >
               Or Have An Account Already?{" "}
-              <span style={{ color: "blue" }}> Click Here </span>
+              <span
+                onClick={() => setFlag(!flag)}
+                style={{ color: "blue", cursor: "pointer" }}
+              >
+                Log in
+              </span>
             </p>
-            {/* <button onClick={signInWithEmail}>
-            Sign In with Email and Password
-          </button> */}
           </div>
         )}
       </div>

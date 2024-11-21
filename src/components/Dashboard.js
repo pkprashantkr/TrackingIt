@@ -201,7 +201,7 @@ const Dashboard = () => {
   const cardStyle = {
     boxShadow: "0px 0px 30px 8px rgba(227, 227, 227, 0.75)",
     margin: "1.5rem",
-    marginTop: "2rem",
+    marginTop: "1.5rem",
     borderRadius: "0.5rem",
     minWidth: "400px",
     flex: 1,
@@ -287,10 +287,26 @@ const Dashboard = () => {
               <h1>Send us your feedback...!</h1>
               <div>
                 <form>
-                  <Input className="footer-input" placeholder="Your name" />
-                  <Input className="footer-input" placeholder="Your email" />
-                  <Input className="footer-input" placeholder="Your address" />
-                  <Button />
+                  <Input
+                    className="footer-input"
+                    placeholder="Your name"
+                    type="text"
+                    required
+                  />
+                  <Input
+                    className="footer-input"
+                    placeholder="Your email"
+                    type="email"
+                    required
+                  />
+                  <Input
+                    className="footer-input"
+                    placeholder="Your address"
+                    required
+                  />
+                  <button className="submit" type="submit">
+                    Submit
+                  </button>
                 </form>
               </div>
             </div>
@@ -304,6 +320,7 @@ const Dashboard = () => {
               padding: "1.7rem",
               fontSize: "1rem",
             }}
+            className="copyright"
           >
             &#169; Prashant Kumar. All rights are reserved.
           </p>

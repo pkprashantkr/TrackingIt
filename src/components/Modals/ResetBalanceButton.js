@@ -73,6 +73,10 @@ function ResetBalanceButton({ setIncome, setExpense, setTotalBalance }) {
             color: "white",
           }, // Custom color for "Yes" button
         }}
+        style={{
+          backgroundColor: "#ededed", // Custom background color for the modal
+          boxShadow: "8px 10px 19px rgba(0, 0, 0, 0.4)", // Add a subtle shadow
+        }}
       >
         {/* Modal content */}
         <p>
