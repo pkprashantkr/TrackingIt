@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { unparse } from "papaparse";
 import "../App.css";
+import axios from "axios";
 
 const Dashboard = () => {
   const [user] = useAuthState(auth);
@@ -27,6 +28,52 @@ const Dashboard = () => {
   const [currentBalance, setCurrentBalance] = useState(0);
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    feedback: "",
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  // Function to handle form changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Function to handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent page reload
+    setLoading(true);
+
+    try {
+      const response = await axios.post(
+        "https://script.google.com/macros/s/AKfycbyIktKdu3QdeuLWmMXTON_sPsuymZYeDxOK2fBod5RJPmrjfrZHH6uSYVuaL8omtwHb/exec", // Replace with your correct Google Apps Script URL
+        formData
+      );
+
+      if (response.data.result === "Success") {
+        setSubmitted(true);
+        setFormData({
+          name: "",
+          email: "",
+          feedback: "",
+        });
+        toast.success("Feedback submitted successfully!");
+      } else {
+        toast.error("Failed to submit feedback. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("An error occurred while submitting feedback.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -264,32 +311,42 @@ const Dashboard = () => {
             <div className="footer">
               <h1>Send us your feedback...!</h1>
               <div>
-                <form>
+                <form onSubmit={handleSubmit}>
                   <Input
                     className="footer-input"
                     placeholder="Your name"
                     type="text"
+                    name="name" // Added the name attribute
+                    value={formData.name}
+                    onChange={handleInputChange}
                     required
                   />
                   <Input
                     className="footer-input"
                     placeholder="Your email"
                     type="email"
+                    name="email" // Added the name attribute
+                    value={formData.email}
+                    onChange={handleInputChange}
                     required
                   />
                   <Input
                     className="footer-input"
                     placeholder="Your feedback"
+                    type="text" // Specify the type (optional but good practice)
+                    name="feedback" // Added the name attribute
+                    value={formData.feedback}
+                    onChange={handleInputChange}
                     required
                   />
-                  <button className="submit" type="submit">
-                    Submit
+                  <button className="submit" type="submit" disabled={loading}>
+                    {loading ? "Submitting..." : "Submit"}
                   </button>
                 </form>
+                {submitted && <p>Thank you for your feedback!</p>}
               </div>
             </div>
           </footer>
-
           <p
             style={{
               textAlign: "center",

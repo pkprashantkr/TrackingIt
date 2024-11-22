@@ -78,27 +78,27 @@ const TransactionSearch = ({
     {
       title: "Name",
       dataIndex: "name",
-      key: "name",
+      key: "Name",
     },
     {
       title: "Type",
       dataIndex: "type",
-      key: "type",
+      key: "Type",
     },
     {
       title: "Date",
       dataIndex: "date",
-      key: "date",
+      key: "Date",
     },
     {
       title: "Amount",
       dataIndex: "amount",
-      key: "amount",
+      key: "Amount",
     },
     {
       title: "Tag",
       dataIndex: "tag",
-      key: "tag",
+      key: "Tag",
     },
     {
       title: "Actions",
