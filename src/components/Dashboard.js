@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Input, Row } from "antd";
+import { Button, Card, Input, message, Row } from "antd";
 import { Line, Pie } from "@ant-design/charts";
 import moment from "moment";
 import TransactionSearch from "./TransactionSearch";
@@ -11,7 +11,7 @@ import Cards from "./Cards";
 import NoTransactions from "./NoTransactions";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase";
-import { addDoc, collection, getDocs, query } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import Loader from "./Loader";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -29,94 +29,86 @@ const Dashboard = () => {
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    feedback: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  // Function to handle form changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // Function to handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page reload
-    setLoading(true);
-
-    try {
-      const response = await axios.post(
-        "https://script.google.com/macros/s/AKfycbyIktKdu3QdeuLWmMXTON_sPsuymZYeDxOK2fBod5RJPmrjfrZHH6uSYVuaL8omtwHb/exec", // Replace with your correct Google Apps Script URL
-        formData
-      );
-
-      if (response.data.result === "Success") {
-        setSubmitted(true);
-        setFormData({
-          name: "",
-          email: "",
-          feedback: "",
-        });
-        toast.success("Feedback submitted successfully!");
-      } else {
-        toast.error("Failed to submit feedback. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      toast.error("An error occurred while submitting feedback.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // States for chart data
+  const [balanceData, setBalanceData] = useState([]);
+  const [spendingDataArray, setSpendingDataArray] = useState([]);
 
   const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const addTransaction = async (transaction) => {
+    try {
+      const docRef = await addDoc(
+        collection(db, `users/${user.uid}/transactions`),
+        transaction
+      );
+      toast.success("Transaction added successfully!");
+      console.log("Transaction written with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding transaction: ", error);
+      toast.error("Failed to add transaction.");
+    }
+  };
+
+  // Function to calculate chart data
   const processChartData = () => {
-    const balanceData = [];
-    const spendingData = {};
+    const newBalanceData = [];
+    const newSpendingData = {};
 
     transactions.forEach((transaction) => {
       const monthYear = moment(transaction.date).format("MMM YYYY");
       const tag = transaction.tag;
 
       if (transaction.type === "income") {
-        if (balanceData.some((data) => data.month === monthYear)) {
-          balanceData.find((data) => data.month === monthYear).balance +=
+        if (newBalanceData.some((data) => data.month === monthYear)) {
+          newBalanceData.find((data) => data.month === monthYear).balance +=
             transaction.amount;
         } else {
-          balanceData.push({ month: monthYear, balance: transaction.amount });
+          newBalanceData.push({
+            month: monthYear,
+            balance: transaction.amount,
+          });
         }
       } else {
-        if (balanceData.some((data) => data.month === monthYear)) {
-          balanceData.find((data) => data.month === monthYear).balance -=
+        if (newBalanceData.some((data) => data.month === monthYear)) {
+          newBalanceData.find((data) => data.month === monthYear).balance -=
             transaction.amount;
         } else {
-          balanceData.push({ month: monthYear, balance: -transaction.amount });
+          newBalanceData.push({
+            month: monthYear,
+            balance: -transaction.amount,
+          });
         }
 
-        if (spendingData[tag]) {
-          spendingData[tag] += transaction.amount;
+        if (newSpendingData[tag]) {
+          newSpendingData[tag] += transaction.amount;
         } else {
-          spendingData[tag] = transaction.amount;
+          newSpendingData[tag] = transaction.amount;
         }
       }
     });
 
-    const spendingDataArray = Object.keys(spendingData).map((key) => ({
+    const newSpendingDataArray = Object.keys(newSpendingData).map((key) => ({
       category: key,
-      value: spendingData[key],
+      value: newSpendingData[key],
     }));
 
-    return { balanceData, spendingDataArray };
+    // Update state
+    setBalanceData(newBalanceData);
+    setSpendingDataArray(newSpendingDataArray);
   };
 
-  const { balanceData, spendingDataArray } = processChartData();
+  useEffect(() => {
+    processChartData(); // Recalculate chart data whenever transactions change
+  }, [transactions]);
+
   const showExpenseModal = () => {
     setIsExpenseModalVisible(true);
   };
@@ -132,10 +124,6 @@ const Dashboard = () => {
   const handleIncomeCancel = () => {
     setIsIncomeModalVisible(false);
   };
-
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
 
   const onFinish = (values, type) => {
     const newTransaction = {
@@ -175,24 +163,6 @@ const Dashboard = () => {
     calculateBalance();
   }, [transactions]);
 
-  async function addTransaction(transaction, many) {
-    try {
-      const docRef = await addDoc(
-        collection(db, `users/${user.uid}/transactions`),
-        transaction
-      );
-      console.log("Document written with ID: ", docRef.id);
-      if (!many) {
-        toast.success("Transaction Added!");
-      }
-    } catch (e) {
-      console.error("Error adding document: ", e);
-      if (!many) {
-        toast.error("Couldn't add transaction");
-      }
-    }
-  }
-
   const fetchTransactions = async () => {
     try {
       const querySnapshot = await getDocs(
@@ -209,6 +179,10 @@ const Dashboard = () => {
       console.error("Error fetching transactions: ", error);
     }
   };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
 
   const balanceConfig = {
     data: balanceData,
@@ -245,6 +219,45 @@ const Dashboard = () => {
     document.body.removeChild(link);
   }
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const url =
+      "https://script.google.com/macros/s/AKfycby4ZZZ0RjsjBz6GmQfJ58hdOgrK91QkdjhnqsQLBY7o_YLnyjkXV0CgD0xZQWaumMB4/exec";
+
+    try {
+      const response = await axios.post(
+        url,
+        JSON.stringify({ ...formData, action: "addContactDetails" }),
+        {
+          headers: {
+            "Content-Type": "text/plain",
+          },
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        setSubmitted(true);
+        setFormData({ name: "", email: "", message: "", phone: "" });
+        toast.success("Feedback submitted successfully!");
+      }
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      toast.success("success.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <Header />
@@ -265,7 +278,7 @@ const Dashboard = () => {
                 setExpense={setExpenses}
                 setTotalBalance={setCurrentBalance}
               />
-            } // Pass ResetBalanceButton as a prop
+            }
           />
 
           <AddExpenseModal
@@ -278,27 +291,7 @@ const Dashboard = () => {
             handleIncomeCancel={handleIncomeCancel}
             onFinish={onFinish}
           />
-          {transactions.length === 0 ? (
-            <NoTransactions />
-          ) : (
-            <>
-              <Row gutter={16}>
-                <Card bordered={true} style={cardStyle}>
-                  <h2 className="head">Financial Statistics</h2>
-                  <Line {...{ ...balanceConfig, data: balanceData }} />
-                </Card>
-
-                <Card bordered={true} style={{ ...cardStyle, flex: 0.45 }}>
-                  <h2 className="pie">Total Spending</h2>
-                  {spendingDataArray.length == 0 ? (
-                    <p>Seems like you haven't spent anything till now...</p>
-                  ) : (
-                    <Pie {...{ ...spendingConfig, data: spendingDataArray }} />
-                  )}
-                </Card>
-              </Row>
-            </>
-          )}
+          {transactions.length === 0 ? <NoTransactions /> : <></>}
           <TransactionSearch
             transactions={transactions}
             exportToCsv={exportToCsv}
@@ -306,17 +299,16 @@ const Dashboard = () => {
             addTransaction={addTransaction}
             user={user}
           />
-
           <footer>
             <div className="footer">
               <h1>Send us your feedback...!</h1>
               <div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={(e) => handleSubmit(e)}>
                   <Input
                     className="footer-input"
                     placeholder="Your name"
                     type="text"
-                    name="name" // Added the name attribute
+                    name="name"
                     value={formData.name}
                     onChange={handleInputChange}
                     required
@@ -325,17 +317,26 @@ const Dashboard = () => {
                     className="footer-input"
                     placeholder="Your email"
                     type="email"
-                    name="email" // Added the name attribute
+                    name="email"
                     value={formData.email}
                     onChange={handleInputChange}
                     required
                   />
                   <Input
                     className="footer-input"
-                    placeholder="Your feedback"
-                    type="text" // Specify the type (optional but good practice)
-                    name="feedback" // Added the name attribute
-                    value={formData.feedback}
+                    placeholder="Your phone number"
+                    type="number"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <Input
+                    className="footer-input"
+                    placeholder="Your message"
+                    type="text"
+                    name="message"
+                    value={formData.message}
                     onChange={handleInputChange}
                     required
                   />
